@@ -4,7 +4,7 @@
        <default-locale>en_US</default-locale>
        <name resource-id="name"/>
        <description>Single Checkbox Parameter</description>
-       <author name="Russ Goldin" email="Rgoldin@tableau.com" organization="Tableau" website="https://tagyoureit.github.io/tableau-single-checkbox-parameters/#/" />
+       <author name="Russ Goldin" email="Rgoldin@tableau.com" organization="Tableau" website="https://tagyoureit.github.io/tableau-single-checkbox-parameters/" />
        <min-api-version>1.0</min-api-version>
        <source-location>
          <url>https://tagyoureit.github.io/tableau-single-checkbox-parameters/#/single-checkbox-parameter/</url>
