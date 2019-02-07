@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chromium against localhost",
+            "url": "http://localhost:3000/#",
+            "webRoot": "${workspaceFolder}",
+            "runtimeExecutable": "/Applications/Chromium.app/Contents/MacOS/Chromium",
+            "runtimeArgs": [
+              "--remote-debugging-port=8696",
+              "--disable-background-networking"
+            ],
+            "smartStep": true,
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**/*.js",
+                "${workspaceFolder}/lib/**/*.js"
+              ]
+        },
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to remote",
+            "address": "127.0.0.1",
+            "port": 8696
+        }
+    ]
+}
