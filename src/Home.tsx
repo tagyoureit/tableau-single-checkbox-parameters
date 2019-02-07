@@ -14,7 +14,7 @@ class Home extends React.Component<any, any> {
 						<div className='right'>
 							<h4 className='big'>What is it?</h4>
 							<p>This extension allows you to have a single checkbox that can toggle between two values.  </p>
-							<p>Why? Because users have been <a href="https://community.tableau.com/ideas/2834">asking</a> for this for a long time.</p>
+							<p>Why? Because users have been <a href='https://community.tableau.com/ideas/2834'>asking</a> for this for a long time.</p>
 							<h4 className='big'>Using the Extension</h4>
 							<ol>
 								<li>Create a parameter with a list of 2 values.</li>
