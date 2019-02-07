@@ -18,7 +18,7 @@ class Home extends React.Component<any, any> {
 							<ol>
 								<li>Create a parameter with a list of 2 values.</li>
 								<li>Drag in a new Extension object to your dashboard.</li>
-								<li>Download/find the manifest <a href='https://tagyoureit.github.io/tableau-single-checkbox-parameters/single-checkbox-parameter.trex'>manifest file</a> you downloaded.</li>
+								<li>Download/find the manifest <a href='https://tagyoureit.github.io/tableau-single-checkbox-parameters/single-checkbox-parameter.trex'>manifest file</a>.</li>
 								<li>Select the parameter you created above for the extension to manipulate.</li>
 								<li>Select the options as presented.</li>
 								<li>Click 'OK'.</li>
