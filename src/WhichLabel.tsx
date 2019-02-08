@@ -8,11 +8,12 @@ export interface SelectorProps {
     enabled: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    checked: boolean;
+    checked: number;
 }
 
 // Shows if setting has not yet been configured
 export const WhichLabel: React.SFC<SelectorProps> = (props) => {
+    console.log(`the whichlabel props`)
     const display = props.enabled ? (
 
             <div>
@@ -23,7 +24,7 @@ export const WhichLabel: React.SFC<SelectorProps> = (props) => {
                     <Row>
                         <Col className='col-sm'>
                         <Radio
-                    checked={!props.checked}
+                    checked={props.checked===0}
                     onChange={props.onChange}
                     name='which_radio'
                     value='0' >
@@ -34,7 +35,7 @@ export const WhichLabel: React.SFC<SelectorProps> = (props) => {
                         </Col>
                         <Col className='col-sm'>
                         <Radio
-                    checked={props.checked}
+                    checked={props.checked===1}
                     onChange={props.onChange}
                     name='which_radio'
                     value='1'   >

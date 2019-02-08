@@ -21,8 +21,8 @@ interface State {
     parameter: string;
     show_name: boolean;
     txt: any;
-    value0: any;
-    value1: any;
+    valueFalse: any;
+    valueTrue: any;
     which_label: number;
 }
 
@@ -56,8 +56,8 @@ class BooleanFilter extends React.Component {
         parameter: '',
         show_name: false,
         txt: '#000000',
-        value0: '',
-        value1: '',
+        valueFalse: '',
+        valueTrue: '',
         which_label: 0
     }
 
@@ -122,8 +122,8 @@ class BooleanFilter extends React.Component {
             parameter: '',
             show_name: false,
             txt: '#000000',
-            value0: '',
-            value1: '',
+            valueFalse: '',
+            valueTrue: '',
             which_label: 0
         })
     }
@@ -141,23 +141,25 @@ class BooleanFilter extends React.Component {
         const settings = window.tableau.extensions.settings.getAll();
         dashboard.findParameterAsync(settings.parameter).then((param: any) => {
 
+            const indexFalse = settings.which_label==='0'?1:0
+            const indexTrue = settings.which_label==='0'?0:1
+
             this.setState((prevState) => ({
                 bg: (settings.bg ? fakeWhiteOverlay(settings.bg) : '#ffffff'),
+                label: param.allowableValues.allowableValues[indexTrue].formattedValue,
+                param_config: true,
                 param_type: param.dataType,
                 parameter: param.name,
                 show_name: settings.show_name === 'true' ? true : false,
                 txt: settings.txt,
-                value0: param.allowableValues.allowableValues[0].formattedValue,
-                value1: param.allowableValues.allowableValues[1].formattedValue,
+                valueFalse: param.allowableValues.allowableValues[indexFalse].formattedValue,
+                valueTrue: param.allowableValues.allowableValues[indexTrue].formattedValue,
+
 
             }))
             document.body.style.backgroundColor = settings.bg;
             document.body.style.color = settings.txt;
 
-            this.setState({
-                label: param.allowableValues.allowableValues[settings.which_label].formattedValue,
-                param_config: true,
-            })
 
             unregisterHandler = param.addEventListener(window.tableau.TableauEventType.ParameterChanged, this.eventChange)
 
@@ -165,7 +167,8 @@ class BooleanFilter extends React.Component {
 
 
         )
-            .then(this.setParamData(false))
+            // call this function (event handler) to set the right value in the checkbox
+            .then(this.eventChange())
     }
 
     // if there is an event change then update the value of the parameter
@@ -173,7 +176,7 @@ class BooleanFilter extends React.Component {
 
         dashboard.findParameterAsync(this.state.parameter).then((param: any) => {
             // if the current (real) parameter formatted value = the value that is displayed
-            if (param.currentValue.formattedValue === this.state.label) {
+            if (param.currentValue.formattedValue === this.state.valueTrue) {
                 this.setState({ checked: true })
 
             }
@@ -190,38 +193,23 @@ class BooleanFilter extends React.Component {
         this.setParamData(e.target.checked)
     }
 
+    // set the parametr value based on the checkbox value
     public setParamData = (checked: boolean) => {
-        // const settings = window.tableau.extensions.settings.getAll();
         dashboard.findParameterAsync(this.state.parameter).then((param: any) => {
             console.log(param)
-            console.log(`trying to set value: ${param.currentValue.formattedValue} for ${param.name}`)
-            let currVal: any;
+            
 
-            // if the label is the first (0) position then send...
-            // send value0 if checked===true, value1 if false
-            // else if label is second in list (1)
-            // send value1 if checked===true, value0 if false
+            if (checked) {
+                console.log(`trying to set value: ${param.currentValue.formattedValue} for ${param.name} with ${this.state.valueTrue}`)
+                param.changeValueAsync(this.state.valueTrue)
 
-            // assign the right value to the currVal item
-            if (this.state.which_label === 0 && checked) {
-
-                currVal = this.state.value0
             }
-            else if (this.state.which_label === 0 && !checked) {
-
-                currVal = this.state.value1
-            }
-            if (this.state.which_label === 1 && !checked) {
-
-                currVal = this.state.value1
-            }
-            if (this.state.which_label === 1 && checked) {
-
-                currVal = this.state.value0
+            else {
+                console.log(`trying to set value: ${param.currentValue.formattedValue} for ${param.name} with ${this.state.valueFalse}`)
+                param.changeValueAsync(this.state.valueFalse)
             }
 
-
-            param.changeValueAsync(currVal)
+            
 
 
         })

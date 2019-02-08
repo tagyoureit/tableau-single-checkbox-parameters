@@ -124,35 +124,24 @@ class Configure extends React.Component<any, State> {
     public testParamSettings = () => {
         this.populateParamList()
         const settings = window.tableau.extensions.settings.getAll();
-        // set the radio button values
-        this.setState({
-            which_label: settings.which_label
-        })
 
         // try to find the parameter to see if it still exists
         dashboard.findParameterAsync(settings.parameter).then((param: any) => {
             if (param.name === settings.parameter) {
                 this.setState({
-                    parameter: settings.parameter
+                    // must make a shallow copy of the array since the object
+                    // won't exist if the setState function is queued
+                    allowableValues: this.extend(true, param.allowableValues, {}),
+                    bg: settings.bg || '#ffffff',
+                    configured: true,
+                    param_config: true,
+                    parameter: settings.parameter,
+                    show_name: settings.show_name === 'true' ? true : false,
+                    txt: settings.txt || '#000000',
+                    which_label: settings.which_label==='0'?0:1
                 });
                 console.log(`Found existing match: ${param.name} has values ${param.allowableValues.allowableValues[0]} and ${param.allowableValues.allowableValues}`)
             }
-
-
-
-
-            // must make a shallow copy of the array since the object
-            // won't exist if the setState function is queued
-            this.setState({
-                allowableValues: this.extend(true, param.allowableValues, {}),
-                bg: settings.bg || '#ffffff',
-                configured: true,
-                param_config: true,
-                show_name: settings.show_name === 'true' ? true : false,
-                txt: settings.txt || '#000000',
-
-            })
-
         }
 
         )
@@ -262,8 +251,9 @@ class Configure extends React.Component<any, State> {
 
     }
 
+    // handle changing the radio button from 0 or 1
     public whichChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ which_label: e.target.value === '0' ? 0 : 1 })
+        this.setState({ which_label: e.target.value==='0'?0:1})
     }
 
     // Handles selection in parameter dropdown
@@ -285,7 +275,7 @@ class Configure extends React.Component<any, State> {
         console.log(`submit clicked`)
         this.setState((prevState) => ({ configured: true }))
         window.tableau.extensions.settings.set('configured', this.state.configured.toString());
-        window.tableau.extensions.settings.set('which_label', this.state.which_label);
+        window.tableau.extensions.settings.set('which_label', this.state.which_label===0?'0':'1');
         window.tableau.extensions.settings.set('parameter', this.state.parameter);
         window.tableau.extensions.settings.set('bg', this.state.bg);
         window.tableau.extensions.settings.set('txt', this.state.txt);
@@ -309,7 +299,7 @@ class Configure extends React.Component<any, State> {
         console.log(`cancel clicked`)
         this.clearParam();
         window.tableau.extensions.settings.set('configured', 'false');
-        window.tableau.extensions.settings.set('which_label', 0);
+        window.tableau.extensions.settings.set('which_label', '0');
         window.tableau.extensions.settings.set('parameter', '');
         window.tableau.extensions.settings.set('bg', '#ffffff');
         window.tableau.extensions.settings.set('txt', '#000000');
@@ -347,7 +337,7 @@ class Configure extends React.Component<any, State> {
                         list={this.state.param_list}
                         onChange={this.paramChange} />
                 </div>
-        
+
 
 
                 <WhichLabel
@@ -355,7 +345,7 @@ class Configure extends React.Component<any, State> {
                     onChange={this.whichChange}
                     onClick={this.whichChange}
                     enabled={this.state.param_config}
-                    checked={this.state.which_label === 1 ? true : false}
+                    checked={this.state.which_label}
                 />
                 <ShowName
                     show_name={this.state.show_name}
